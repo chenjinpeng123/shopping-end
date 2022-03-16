@@ -7,8 +7,9 @@ import lombok.Data;
  */
 @Data
 public class UpdatePasswordVO {
-    // 原始密码
-    private String oldPassword;
+    // 当前用户id
+    private Long userId;
+
     // 新密码
     private String newPassword;
 }

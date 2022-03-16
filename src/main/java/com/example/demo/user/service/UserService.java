@@ -19,4 +19,6 @@ public interface UserService  {
 
 //    上传用户图片
     R uploadPicture(Long userId, MultipartFile file);
+
+    R updatePassword(UpdatePasswordVO updatePasswordVO);
 }

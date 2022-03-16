@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 .eq(User::getPassword,user.getPassword());
         User userOne = userMapper.selectOne(userWrapper);
         if (userOne != null){
-            return R.ok(userOne.getId());
+            return R.ok(userOne);
         } else{
             return R.ok("用户名或密码错误");
         }
@@ -108,7 +108,15 @@ public class UserServiceImpl implements UserService {
         user.setAvatar("img/head/" + filename);
         wrapper.eq("id",userId);
         userMapper.update(user,wrapper);
-        return R.ok("img/head/" + filename);
+        return R.ok(user.getAvatar());
     }
 
+    @Override
+    public R updatePassword(UpdatePasswordVO updatePasswordVO) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",updatePasswordVO.getUserId());
+        User user = new User();
+        user.setPassword(updatePasswordVO.getNewPassword());
+        return R.ok(userMapper.update(user, wrapper));
+    }
 }
