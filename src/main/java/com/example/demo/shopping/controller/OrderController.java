@@ -1,10 +1,7 @@
 package com.example.demo.shopping.controller;
 
 import com.example.demo.shopping.entity.dto.OrderAddDTO;
-import com.example.demo.shopping.entity.vo.OrderAddVO;
-import com.example.demo.shopping.entity.vo.OrderAddressVO;
-import com.example.demo.shopping.entity.vo.OrderEvaluateVO;
-import com.example.demo.shopping.entity.vo.OrderVO;
+import com.example.demo.shopping.entity.vo.*;
 import com.example.demo.shopping.service.OrderService;
 import com.example.demo.util.R;
 import lombok.AllArgsConstructor;
@@ -42,7 +39,7 @@ public class OrderController {
     /**
      * 查询该用户的订单
      */
-    @GetMapping("userList")
+    @GetMapping("/userList")
     @ResponseBody
     public R userList(Long userId) {
         return orderService.userList(userId);
@@ -51,7 +48,7 @@ public class OrderController {
     /**
      * 改变订单状态
      */
-    @PostMapping("updateState")
+    @PostMapping("/updateState")
     @ResponseBody
     public R updateState(String state,Long id) {
         return orderService.updateState(state,id);
@@ -60,7 +57,7 @@ public class OrderController {
     /**
      * 管理员删除订单
      */
-    @PostMapping("delete")
+    @PostMapping("/delete")
     @ResponseBody
     public R delete(Long id) {
         return orderService.delete(id);
@@ -69,7 +66,7 @@ public class OrderController {
     /**
      * 用户对订单进行评价
      */
-    @PostMapping("addEvaluate")
+    @PostMapping("/addEvaluate")
     @ResponseBody
     public R addEvaluate(@RequestBody OrderEvaluateVO orderEvaluateVO) {
         Long id = orderEvaluateVO.getId();
@@ -81,7 +78,7 @@ public class OrderController {
     /**
      * 用户删除订单（在数据库并未真正的删除）
      */
-    @PostMapping("userDelete")
+    @PostMapping("/userDelete")
     @ResponseBody
     public R userDelete(Long id) {
         return orderService.userDelete(id);
@@ -90,7 +87,7 @@ public class OrderController {
     /**
      * 查询商家的订单
      */
-    @GetMapping("merList")
+    @GetMapping("/merList")
     @ResponseBody
     public R merList(Long merId) {
         return orderService.meiList(merId);
@@ -99,9 +96,27 @@ public class OrderController {
     /**
      * 商家删除订单
      */
-    @PostMapping("merDelete")
+    @PostMapping("/merDelete")
     @ResponseBody
     public R merDelete(Long id) {
         return orderService.merDelete(id);
+    }
+
+    /**
+     * 管理员发货
+     */
+    @PostMapping("/deliver")
+    @ResponseBody
+    public R deliver(Long id) {
+        return orderService.deliver(id);
+    }
+
+    /**
+     * 订单查看时的搜索
+     */
+    @PostMapping("/checkSearch")
+    @ResponseBody
+    public R checkSearch(@RequestBody CheckSearchVO checkSearchVO) {
+        return orderService.checkSearch(checkSearchVO);
     }
 }

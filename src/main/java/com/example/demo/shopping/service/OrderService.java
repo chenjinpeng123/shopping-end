@@ -1,5 +1,6 @@
 package com.example.demo.shopping.service;
 
+import com.example.demo.shopping.entity.vo.CheckSearchVO;
 import com.example.demo.shopping.entity.vo.OrderAddVO;
 import com.example.demo.shopping.entity.vo.OrderVO;
 import com.example.demo.util.R;
@@ -24,4 +25,9 @@ public interface OrderService{
     R meiList(Long merId);
 
     R merDelete(Long id);
+
+    R deliver(Long id);
+
+    R checkSearch(CheckSearchVO checkSearchVO);
+
 }

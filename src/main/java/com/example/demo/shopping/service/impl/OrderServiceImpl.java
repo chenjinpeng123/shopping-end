@@ -2,14 +2,19 @@ package com.example.demo.shopping.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.shopping.entity.Goods;
 import com.example.demo.shopping.entity.Order;
+import com.example.demo.shopping.entity.dto.GoodsListDTO;
 import com.example.demo.shopping.entity.dto.OrderAddDTO;
+import com.example.demo.shopping.entity.vo.CheckSearchVO;
 import com.example.demo.shopping.entity.vo.OrderAddVO;
 import com.example.demo.shopping.entity.vo.OrderVO;
 import com.example.demo.shopping.mapper.GoodMapper;
 import com.example.demo.shopping.mapper.OrderMapper;
 import com.example.demo.shopping.service.OrderService;
+import com.example.demo.util.BackPage;
 import com.example.demo.util.R;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
     public R userList(Long userId) {
         QueryWrapper<Order> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",userId);
+        wrapper.orderByDesc("id");
         return R.ok(orderMapper.selectList(wrapper));
     }
 
@@ -131,7 +137,9 @@ public class OrderServiceImpl implements OrderService {
     public R meiList(Long merId) {
         QueryWrapper<Order> wrapper = new QueryWrapper<>();
         wrapper.eq("mer_id",merId);
-        return R.ok(orderMapper.selectList(wrapper));
+        wrapper.orderByDesc("id");
+        IPage<Order> orderIPage = new Page<>(1,10);
+        return R.ok(orderMapper.selectPage(orderIPage,wrapper));
     }
 
     @Override
@@ -146,6 +154,41 @@ public class OrderServiceImpl implements OrderService {
         wrapper.eq("id",id);
         return R.ok(orderMapper.update(order,wrapper));
     }
+
+    @Override
+    public R deliver(Long id) {
+        Order order = orderMapper.selectById(id);
+        order.setState("已发货");
+        UpdateWrapper<Order> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        return R.ok(orderMapper.update(order,wrapper));
+    }
+
+    @Override
+    public R checkSearch(CheckSearchVO checkSearchVO) {
+        QueryWrapper<Order> wrapper = new QueryWrapper<>();
+        wrapper.orderByDesc("id");
+        if (checkSearchVO.getMerId() != null) {
+            wrapper.eq("mer_id",checkSearchVO.getMerId());
+        }
+        if (checkSearchVO.getId() != null) {
+            wrapper.like("id",checkSearchVO.getId());
+        }
+        if (checkSearchVO.getName() != null) {
+            wrapper.like("name",checkSearchVO.getName());
+        }
+        if (!checkSearchVO.getGroupId().isEmpty()) {
+            wrapper.in("group_id",checkSearchVO.getGroupId());
+        }
+        if (checkSearchVO.getState() != null) {
+            wrapper.eq("state",checkSearchVO.getState());
+        }
+        IPage<Order> orderIPage = new Page<>(checkSearchVO.getPage(),10);
+        // 封装数据，其中getRecords()是获取记录数，getCurrent()获取当前页数
+        // getPages()获取总页数，getTotal()获取记录总数
+        return R.ok(orderMapper.selectPage(orderIPage,wrapper));
+    }
+
 
 
     public String getStringDate() {
