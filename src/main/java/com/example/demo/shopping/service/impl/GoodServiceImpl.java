@@ -1,12 +1,15 @@
 package com.example.demo.shopping.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.demo.shopping.entity.Goods;
+import com.example.demo.shopping.entity.vo.UpdateGoodVO;
 import com.example.demo.shopping.entity.vo.UploadGoodsVO;
 import com.example.demo.shopping.mapper.GoodGroupMapper;
 import com.example.demo.shopping.mapper.GoodMapper;
 import com.example.demo.shopping.service.GoodService;
 import com.example.demo.util.R;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +42,7 @@ public class GoodServiceImpl implements GoodService {
         good.setName(uploadGoodsVO.getName());
         good.setPrice(uploadGoodsVO.getPrice());
         good.setBalance(uploadGoodsVO.getBalance());
+        good.setState(true);
         goodMapper.insert(good);
         return R.ok("上传成功");
     }
@@ -96,7 +100,30 @@ public class GoodServiceImpl implements GoodService {
         } catch (IOException e) {
             throw new RuntimeException("文件读写异常");
         }
-            path = "img/shopping/" + groupName + "/" + filename;
+            path = "/img/shopping/" + groupName + "/" + filename;
         return R.ok(path);
+    }
+
+    @Override
+    public R changeState(Long id) {
+        Goods goods = goodMapper.selectById(id);
+        goods.setState(!goods.getState());
+        UpdateWrapper<Goods> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        return R.ok(goodMapper.update(goods,wrapper));
+    }
+
+    @Override
+    public R delete(Long id) {
+        return R.ok(goodMapper.deleteById(id));
+    }
+
+    @Override
+    public R update(UpdateGoodVO updateGoodVO) {
+        UpdateWrapper<Goods> wrapper = new UpdateWrapper<>();
+        Goods good = new Goods();
+        wrapper.eq("id",updateGoodVO.getId());
+        BeanUtils.copyProperties(updateGoodVO,good);
+        return R.ok(goodMapper.update(good,wrapper));
     }
 }

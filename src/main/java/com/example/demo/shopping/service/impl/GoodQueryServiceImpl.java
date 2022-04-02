@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.shopping.entity.Goods;
 import com.example.demo.shopping.entity.dto.GoodsListDTO;
+import com.example.demo.shopping.entity.vo.GoodListVO;
 import com.example.demo.shopping.mapper.GoodQueryMapper;
 import com.example.demo.shopping.service.GoodQueryService;
 import com.example.demo.util.BackPage;
@@ -13,7 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,15 +26,21 @@ public class GoodQueryServiceImpl implements GoodQueryService {
     private final GoodQueryMapper goodQueryMapper;
 
     @Override
-    public R list(Integer page, Integer num, Long groupId, String name) {
+    public R list(Integer page, Integer num, List<Long> groupId, String name, Long roleId, Long userId) {
         BackPage<GoodsListDTO> postBackPage = new BackPage<>();
         // 设置条件构造器
         QueryWrapper<Goods> wrapper = new QueryWrapper<>();
+        if (roleId != null && roleId == 3) {
+            wrapper.eq("mer_id",userId);
+        }
         if (groupId != null) {
-            wrapper.eq("group_id",groupId);
+            wrapper.in("group_id",groupId);
         }
         if (name != null) {
             wrapper.like("name",name);
+        }
+        if (roleId == null) {
+            wrapper.eq("state",true);
         }
         // 构造分页信息，其中的Page<>(page, num)的第一个参数是页数，而第二个参数是每页的记录数
         IPage<Goods> goodsIPage = new Page<>(page, num);
@@ -93,5 +102,10 @@ public class GoodQueryServiceImpl implements GoodQueryService {
             goodsListDTOS.add(goodsListDTO);
         }
         return R.ok(goodsListDTOS);
+    }
+
+    @Override
+    public R backList(GoodListVO goodListVO) {
+        return null;
     }
 }

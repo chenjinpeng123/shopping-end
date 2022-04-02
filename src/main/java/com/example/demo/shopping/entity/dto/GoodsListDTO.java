@@ -15,4 +15,5 @@ public class GoodsListDTO {
     private String address;
     private Double balance;
     private String[] colors;
+    private Boolean state;
 }

@@ -5,17 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
-public class Goods {
+public class Consignee {
+
     @TableId(type = IdType.AUTO)
     private Long id;
-    private Long merId;
-    private Long groupId;
+    private Long userId;
     private String name;
-    private Double price;
-    private String introduction;
-    private String picture;
     private String address;
-    private Double balance;
-    private String color;
-    private Boolean state;
+    private String phone;
 }
