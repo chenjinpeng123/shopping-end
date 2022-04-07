@@ -8,6 +8,7 @@ import com.example.demo.shopping.entity.Goods;
 import com.example.demo.shopping.entity.Order;
 import com.example.demo.shopping.entity.dto.GoodsListDTO;
 import com.example.demo.shopping.entity.dto.OrderAddDTO;
+import com.example.demo.shopping.entity.dto.OrderSearchTimeDTO;
 import com.example.demo.shopping.entity.vo.CheckSearchVO;
 import com.example.demo.shopping.entity.vo.OrderAddVO;
 import com.example.demo.shopping.entity.vo.OrderVO;
@@ -22,9 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -189,11 +190,95 @@ public class OrderServiceImpl implements OrderService {
         return R.ok(orderMapper.selectPage(orderIPage,wrapper));
     }
 
+    @Override
+    public R searchTime(String name) {
+        OrderSearchTimeDTO searchTimeDTO = new OrderSearchTimeDTO();
+        List<String> dates = new ArrayList<>();
+        List<Object> obs = new ArrayList<>();
+        if (name.equals("day")) {
+            for (int i = 11; i >= 0; i--) {
+                dates.add(getDate(i));
+            }
 
+            for (int i = 10; i >=-1; i--) {
+                Object ob = orderMapper.getOrderByDay(i,"orderNum");
+                obs.add(Objects.requireNonNullElse(ob, 0));
+            }
+            searchTimeDTO.setOrderNum(obs);
 
-    public String getStringDate() {
+            obs = new ArrayList<>();
+            for (int i = 10; i >=-1; i--) {
+                Object ob = orderMapper.getOrderByDay(i,"dropShip");
+                obs.add(Objects.requireNonNullElse(ob, 0));
+            }
+            searchTimeDTO.setDropShip(obs);
+
+            obs = new ArrayList<>();
+            for (int i = 10; i >=-1; i--) {
+                Object ob = orderMapper.getOrderByDay(i,"pushDelivery");
+                obs.add(Objects.requireNonNullElse(ob, 0));
+            }
+            searchTimeDTO.setPushDelivery(obs);
+
+            obs = new ArrayList<>();
+            for (int i = 10; i >=-1; i--) {
+                Object ob = orderMapper.getOrderByDay(i,"money");
+                obs.add(Objects.requireNonNullElse(ob, 0));
+            }
+
+        } else {
+            for (int i = 11; i >= 0; i--) {
+                String date = getDateByMonth(i);
+                dates.add(date);
+                obs.add(orderMapper.getOrderByMonth(date,"orderNum"));
+            }
+            searchTimeDTO.setOrderNum(obs);
+
+            obs = new ArrayList<>();
+            for (int i = 11; i >= 0; i--) {
+                String date = getDateByMonth(i);
+                obs.add(orderMapper.getOrderByMonth(date,"dropShip"));
+            }
+            searchTimeDTO.setDropShip(obs);
+
+            obs = new ArrayList<>();
+            for (int i = 11; i >= 0; i--) {
+                String date = getDateByMonth(i);
+                obs.add(orderMapper.getOrderByMonth(date,"pushDelivery"));
+            }
+            searchTimeDTO.setPushDelivery(obs);
+
+            obs = new ArrayList<>();
+            for (int i = 11; i >= 0; i--) {
+                String date = getDateByMonth(i);
+                Object ob = orderMapper.getOrderByMonth(date,"money");
+                obs.add(Objects.requireNonNullElse(ob, 0));
+            }
+        }
+        searchTimeDTO.setMoney(obs);
+        searchTimeDTO.setDates(dates);
+        return R.ok(searchTimeDTO);
+    }
+
+    public java.sql.Date getStringDate() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return formatter.format(currentTime);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return java.sql.Date.valueOf(formatter.format(currentTime));
+    }
+
+    public String getDate(int i) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd");
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_WEEK,-i);
+        return formatter.format(calendar.getTime());
+    }
+
+    public String getDateByMonth(int i) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH,-i);
+        return formatter.format(calendar.getTime());
     }
 }

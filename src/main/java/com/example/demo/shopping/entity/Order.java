@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
+
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @TableName("`order`")
@@ -22,7 +26,7 @@ public class Order {
     private String consigneeAddress;
     private String consigneePhone;
     private String state;
-    private String createDate;
+    private Date createDate;
     private String evaluate;
     private String picture;
     private Double dealPrice;

@@ -30,4 +30,5 @@ public interface OrderService{
 
     R checkSearch(CheckSearchVO checkSearchVO);
 
+    R searchTime(String name);
 }

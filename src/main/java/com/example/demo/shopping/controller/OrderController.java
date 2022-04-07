@@ -119,4 +119,13 @@ public class OrderController {
     public R checkSearch(@RequestBody CheckSearchVO checkSearchVO) {
         return orderService.checkSearch(checkSearchVO);
     }
+
+    /**
+     * 查询订单的时间分布
+     */
+    @GetMapping("/searchTime")
+    @ResponseBody
+    public R orderSearchTime(String name) {
+        return orderService.searchTime(name);
+    }
 }

@@ -36,7 +36,7 @@ public class GoodQueryServiceImpl implements GoodQueryService {
         if (groupId != null) {
             wrapper.in("group_id",groupId);
         }
-        if (name != null) {
+        if (name != null && !name.equals("")) {
             wrapper.like("name",name);
         }
         if (roleId == null) {

@@ -5,4 +5,41 @@
     <select id="getUserId" resultType="java.lang.Long">
         select user_id from `order` where id=#{param1};
     </select>
+
+    <select id="getOrderByDay" resultType="java.lang.Object">
+        <if test = "name == 'orderNum'">
+            SELECT COUNT(*) FROM `order` WHERE TO_DAYS(date_sub(now() ,INTERVAL #{i} DAY)) - TO_DAYS(create_date) = 1
+        </if>
+
+        <if test = "name == 'dropShip'">
+            SELECT COUNT(*) FROM `order` WHERE TO_DAYS(date_sub(now() ,INTERVAL #{i} DAY)) - TO_DAYS(create_date) = 1 and (state = "待发货" or state = "已催发货")
+        </if>
+
+        <if test = "name == 'pushDelivery'">
+            SELECT COUNT(*) FROM `order` WHERE TO_DAYS(date_sub(now() ,INTERVAL #{i} DAY)) - TO_DAYS(create_date) = 1 and state = "已催发货"
+        </if>
+
+        <if test = "name == 'money'">
+            SELECT SUM(deal_price) FROM `order` WHERE TO_DAYS(date_sub(now() ,INTERVAL #{i} DAY)) - TO_DAYS(create_date) = 1
+        </if>
+    </select>
+
+    <select id="getOrderByMonth" resultType="java.lang.Object">
+        <if test = "name == 'orderNum'">
+            SELECT COUNT(*) FROM `order` WHERE  create_date LIKE '${date}%'
+        </if>
+
+        <if test = "name == 'dropShip'">
+            SELECT COUNT(*) FROM `order` WHERE create_date LIKE '${date}%' and (state = "待发货" or state = "已催发货")
+        </if>
+
+        <if test = "name == 'pushDelivery'">
+            SELECT COUNT(*) FROM `order` WHERE create_date LIKE '${date}%' and state = "已催发货"
+        </if>
+
+        <if test = "name == 'money'">
+            SELECT SUM(deal_price) FROM `order` WHERE create_date LIKE '${date}%'
+        </if>
+    </select>
+
 </mapper>
