@@ -1,6 +1,7 @@
 package com.example.demo.shopping.controller;
 
 import com.example.demo.shopping.entity.Admin;
+import com.example.demo.shopping.entity.vo.UpdatePasswordVO;
 import com.example.demo.shopping.service.AdminService;
 import com.example.demo.util.R;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,11 @@ public class AdminController {
     @PostMapping("/add")
     public R add(@RequestBody Admin admin) {
         return adminService.add(admin);
+    }
+
+    @ResponseBody
+    @PostMapping("/update")
+    public R update(@RequestBody UpdatePasswordVO updatePasswordVO) {
+        return adminService.update(updatePasswordVO);
     }
 }

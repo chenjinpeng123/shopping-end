@@ -17,4 +17,8 @@ public interface UserService  {
     R uploadPicture(Long userId, MultipartFile file);
 
     R updatePassword(UpdatePasswordVO updatePasswordVO);
+
+    R list();
+
+    R delete(Long id);
 }

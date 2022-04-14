@@ -6,5 +6,5 @@ import lombok.Data;
 public class GoodsGroup {
     private Long id;
     private String name;
-    private String eName;
+    private String englishName;
 }

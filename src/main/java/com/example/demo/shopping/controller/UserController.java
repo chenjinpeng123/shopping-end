@@ -16,6 +16,12 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/list")
+    @ResponseBody
+    public R list(){
+        return userService.list();
+    }
+
     @PostMapping("/login")
     @ResponseBody
     public R examine(@RequestBody User user){
@@ -28,8 +34,6 @@ public class UserController {
         return R.ok(userService.addUser(user));
     }
 
-
-
     @PostMapping("/uploadPicture")
     @ResponseBody
     public R uploadPicture(@RequestParam MultipartFile file, @RequestParam Long userId) {
@@ -40,6 +44,12 @@ public class UserController {
     @ResponseBody
     public R updatePassword(@RequestBody UpdatePasswordVO updatePasswordVO) {
         return userService.updatePassword(updatePasswordVO);
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public R delete(Long id){
+        return userService.delete(id);
     }
 
 }

@@ -13,7 +13,7 @@ public class Admin {
     private String password;
     private String phone;
 
-    Admin() {
+    public Admin() {
         this.roleId = 3L;
     }
 }

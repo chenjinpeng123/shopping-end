@@ -2,6 +2,7 @@ package com.example.demo.shopping.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.demo.shopping.entity.User;
 import com.example.demo.shopping.entity.vo.UpdatePasswordVO;
@@ -114,5 +115,15 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setPassword(updatePasswordVO.getNewPassword());
         return R.ok(userMapper.update(user, wrapper));
+    }
+
+    @Override
+    public R list() {
+        return R.ok(userMapper.selectList(new QueryWrapper<User>()));
+    }
+
+    @Override
+    public R delete(Long id) {
+        return R.ok(userMapper.deleteById(id));
     }
 }

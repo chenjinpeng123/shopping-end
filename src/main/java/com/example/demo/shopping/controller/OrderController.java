@@ -76,6 +76,15 @@ public class OrderController {
     }
 
     /**
+     * 获取商品的评价
+     */
+    @GetMapping("/getEvaluate")
+    @ResponseBody
+    public R getEvaluate(Long id) {
+        return orderService.getEvaluate(id);
+    }
+
+    /**
      * 用户删除订单（在数据库并未真正的删除）
      */
     @PostMapping("/userDelete")
@@ -127,5 +136,23 @@ public class OrderController {
     @ResponseBody
     public R orderSearchTime(String name) {
         return orderService.searchTime(name);
+    }
+
+    /**
+     * 查询每个商品分类的订单数量
+     */
+    @GetMapping("/classifyNumber")
+    @ResponseBody
+    public R classifyNumber() {
+        return orderService.classifyNumber();
+    }
+
+    /**
+     * 查询每个商品分类的订单金额
+     */
+    @GetMapping("/classifyMoney")
+    @ResponseBody
+    public R classifyMoney() {
+        return orderService.classifyMoney();
     }
 }

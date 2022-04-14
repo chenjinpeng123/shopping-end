@@ -42,4 +42,16 @@
         </if>
     </select>
 
+    <select id="selectClassifyNumber" resultType="com.example.demo.shopping.entity.dto.OrderClassifyNumberDTO">
+        SELECT (SELECT `name` FROM goods_group where id = group_id) 'name',SUM(num) 'value' FROM `order` GROUP BY group_id
+    </select>
+
+    <select id="selectClassifyMoney" resultType="com.example.demo.shopping.entity.dto.OrderClassifyMoneyDTO">
+        SELECT (SELECT `name` FROM goods_group where id = group_id) 'name',SUM(deal_price) 'value' FROM `order` GROUP BY group_id
+    </select>
+
+    <select id="getEvaluate" resultType="com.example.demo.shopping.entity.vo.OrderEvaluateVO">
+        SELECT id,evaluate,score FROM `order` where goods_id = 2 AND !ISNULL(evaluate)
+    </select>
+
 </mapper>

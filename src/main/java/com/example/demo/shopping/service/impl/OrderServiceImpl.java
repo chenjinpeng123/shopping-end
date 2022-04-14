@@ -6,11 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.shopping.entity.Goods;
 import com.example.demo.shopping.entity.Order;
-import com.example.demo.shopping.entity.dto.GoodsListDTO;
-import com.example.demo.shopping.entity.dto.OrderAddDTO;
-import com.example.demo.shopping.entity.dto.OrderSearchTimeDTO;
+import com.example.demo.shopping.entity.dto.*;
 import com.example.demo.shopping.entity.vo.CheckSearchVO;
 import com.example.demo.shopping.entity.vo.OrderAddVO;
+import com.example.demo.shopping.entity.vo.OrderEvaluateVO;
 import com.example.demo.shopping.entity.vo.OrderVO;
 import com.example.demo.shopping.mapper.GoodMapper;
 import com.example.demo.shopping.mapper.OrderMapper;
@@ -137,7 +136,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public R meiList(Long merId) {
         QueryWrapper<Order> wrapper = new QueryWrapper<>();
-        wrapper.eq("mer_id",merId);
+        if (merId != null) {
+            wrapper.ne("delete_state",2);
+            wrapper.ne("delete_state",3);
+            wrapper.eq("mer_id",merId);
+        }
         wrapper.orderByDesc("id");
         IPage<Order> orderIPage = new Page<>(1,10);
         return R.ok(orderMapper.selectPage(orderIPage,wrapper));
@@ -202,28 +205,48 @@ public class OrderServiceImpl implements OrderService {
 
             for (int i = 10; i >=-1; i--) {
                 Object ob = orderMapper.getOrderByDay(i,"orderNum");
-                obs.add(Objects.requireNonNullElse(ob, 0));
+                if (ob != null) {
+                    obs.add(ob);
+                } else {
+                    obs.add(0);
+                }
+//                obs.add(Objects.requireNonNullElse(ob, 0));
             }
             searchTimeDTO.setOrderNum(obs);
 
             obs = new ArrayList<>();
             for (int i = 10; i >=-1; i--) {
                 Object ob = orderMapper.getOrderByDay(i,"dropShip");
-                obs.add(Objects.requireNonNullElse(ob, 0));
+                if (ob != null) {
+                    obs.add(ob);
+                } else {
+                    obs.add(0);
+                }
+//                obs.add(Objects.requireNonNullElse(ob, 0));
             }
             searchTimeDTO.setDropShip(obs);
 
             obs = new ArrayList<>();
             for (int i = 10; i >=-1; i--) {
                 Object ob = orderMapper.getOrderByDay(i,"pushDelivery");
-                obs.add(Objects.requireNonNullElse(ob, 0));
+                if (ob != null) {
+                    obs.add(ob);
+                } else {
+                    obs.add(0);
+                }
+//                obs.add(Objects.requireNonNullElse(ob, 0));
             }
             searchTimeDTO.setPushDelivery(obs);
 
             obs = new ArrayList<>();
             for (int i = 10; i >=-1; i--) {
                 Object ob = orderMapper.getOrderByDay(i,"money");
-                obs.add(Objects.requireNonNullElse(ob, 0));
+                if (ob != null) {
+                    obs.add(ob);
+                } else {
+                    obs.add(0);
+                }
+//                obs.add(Objects.requireNonNullElse(ob, 0));
             }
 
         } else {
@@ -252,12 +275,35 @@ public class OrderServiceImpl implements OrderService {
             for (int i = 11; i >= 0; i--) {
                 String date = getDateByMonth(i);
                 Object ob = orderMapper.getOrderByMonth(date,"money");
-                obs.add(Objects.requireNonNullElse(ob, 0));
+                if (ob != null) {
+                    obs.add(ob);
+                } else {
+                    obs.add(0);
+                }
+//                obs.add(Objects.requireNonNullElse(ob, 0));
             }
         }
         searchTimeDTO.setMoney(obs);
         searchTimeDTO.setDates(dates);
         return R.ok(searchTimeDTO);
+    }
+
+    @Override
+    public R classifyNumber() {
+        List<OrderClassifyNumberDTO> list = orderMapper.selectClassifyNumber();
+        return R.ok(list);
+    }
+
+    @Override
+    public R classifyMoney() {
+        List<OrderClassifyMoneyDTO> list = orderMapper.selectClassifyMoney();
+        return R.ok(list);
+    }
+
+    @Override
+    public R getEvaluate(Long id) {
+        List<OrderEvaluateVO> list = orderMapper.getEvaluate(id);
+        return R.ok(list);
     }
 
     public java.sql.Date getStringDate() {

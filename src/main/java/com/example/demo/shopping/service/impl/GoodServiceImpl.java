@@ -68,14 +68,14 @@ public class GoodServiceImpl implements GoodService {
 
 
         if (groupId != null) {
-            groupName = goodGroupMapper.selectById(groupId).getEName();
+                    groupName = goodGroupMapper.selectById(groupId).getEnglishName();
         }
 
         // 上传的文件.../upload/文件.png
         if (groupName.equals("")) {
-            parent = "E:\\vue3.6.0实战\\shopping3\\public\\img\\shopping";
+            parent = "E:\\拓胜商城\\shopping-front\\public\\img\\shopping";
         } else {
-            parent = "E:\\vue3.6.0实战\\shopping3\\public\\img\\shopping\\" + groupName;
+            parent = "E:\\拓胜商城\\shopping-front\\public\\img\\shopping\\" + groupName;
         }
 
         // File对象指向这个路径，判断File是否存在
